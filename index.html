@@ -1,566 +1,244 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Fita K7 - Noite Estrelada</title>
-    <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=Special+Elite&display=swap" rel="stylesheet">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        :root {
+            --bg-color: #050a15;
+            --cassette-main: #1e293b;
+            --cassette-border: #0f172a;
+            --gold: #fbbf24;
         }
 
         body {
+            background: radial-gradient(circle at center, #1a2a42 0%, #050a15 100%);
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            background: radial-gradient(circle at center, #1a2a42 0%, #050a15 100%);
-            font-family: 'Courier Prime', monospace;
+            margin: 0;
             overflow: hidden;
             perspective: 1000px;
+            font-family: 'Courier New', Courier, monospace;
         }
 
-        /* Fundo de estrelas brilhantes */
-        .stars {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            background-image: 
-                radial-gradient(2px 2px at 20px 30px, #eee, rgba(0,0,0,0)),
-                radial-gradient(2px 2px at 40px 70px, #fff, rgba(0,0,0,0)),
-                radial-gradient(2px 2px at 50px 160px, #ddd, rgba(0,0,0,0)),
-                radial-gradient(2px 2px at 90px 40px, #fff, rgba(0,0,0,0)),
-                radial-gradient(2px 2px at 130px 80px, #fff, rgba(0,0,0,0)),
-                radial-gradient(2px 2px at 160px 120px, #ddd, rgba(0,0,0,0));
-            background-repeat: repeat;
-            background-size: 200px 200px;
-            opacity: 0.3;
-            animation: twinkle 5s infinite linear;
-        }
-
-        @keyframes twinkle {
-            0% { opacity: 0.2; }
-            50% { opacity: 0.5; }
-            100% { opacity: 0.2; }
-        }
-
-        /* Container principal com efeito de inclinação 3D */
+        /* Container da Cassete com efeito 3D */
         .cassette-wrapper {
+            width: 550px;
+            height: 350px;
             position: relative;
             transform-style: preserve-3d;
             transition: transform 0.1s ease-out;
-            z-index: 10;
+            cursor: pointer;
         }
 
-        /* Brilho pulsante em volta da fita */
         .glow {
             position: absolute;
-            top: -20px;
-            left: -20px;
-            right: -20px;
-            bottom: -20px;
+            top: -20px; left: -20px; right: -20px; bottom: -20px;
             background: linear-gradient(45deg, #f0e130, #3a7bd5, #00d2ff);
-            border-radius: 40px;
+            border-radius: 30px;
             filter: blur(40px);
-            opacity: 0.5;
+            opacity: 0.3;
             z-index: -1;
             animation: pulseGlow 4s infinite alternate;
         }
 
         @keyframes pulseGlow {
-            0% { opacity: 0.3; transform: scale(0.98); }
-            100% { opacity: 0.6; transform: scale(1.02); filter: blur(50px); }
+            from { opacity: 0.2; transform: scale(0.95); }
+            to { opacity: 0.4; transform: scale(1.05); }
         }
 
-        /* Estrutura principal da Fita K7 */
-        .cassette {
-            width: 600px;
-            height: 380px;
-            background: rgba(255, 255, 255, 0.1);
+        .cassette-body {
+            width: 100%;
+            height: 100%;
+            background: var(--cassette-main);
             border-radius: 20px;
+            border: 6px solid var(--cassette-border);
             position: relative;
-            box-shadow: 
-                inset 0 0 20px rgba(255,255,255,0.4),
-                inset 0 0 5px rgba(255,255,255,0.8),
-                0 20px 50px rgba(0,0,0,0.8),
-                0 0 0 2px rgba(255,255,255,0.2);
-            backdrop-filter: blur(10px);
+            box-shadow: 0 30px 60px rgba(0,0,0,0.8), inset 0 0 30px rgba(0,0,0,0.5);
             display: flex;
             flex-direction: column;
             align-items: center;
             overflow: hidden;
-            border-bottom-left-radius: 30px;
-            border-bottom-right-radius: 30px;
         }
 
-        /* O Adesivo com a pintura e base */
-        .label-area {
-            width: 560px;
-            height: 270px;
-            margin-top: 20px;
-            border-radius: 15px;
-            position: relative;
-            overflow: hidden;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
-            background: #222;
-        }
-
-        /* Capa: A Noite Estrelada */
+        /* Pintura de fundo */
         .art-cover {
             position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/e/ea/Van_Gogh_-_Starry_Night_-_Google_Art_Project.jpg/1200px-Van_Gogh_-_Starry_Night_-_Google_Art_Project.jpg');
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: url('https://upload.wikimedia.org/wikipedia/commons/thumb/e/ea/Van_Gogh_-_Starry_Night_-_Google_Art_Project.jpg/1280px-Van_Gogh_-_Starry_Night_-_Google_Art_Project.jpg');
             background-size: cover;
-            background-position: center 20%;
-            z-index: 1;
-            filter: contrast(1.1) saturate(1.2);
+            background-position: center;
+            opacity: 0.5;
+            mix-blend-mode: soft-light;
         }
 
-        /* Janela central dos carretéis */
-        .reel-window {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 300px;
-            height: 100px;
-            background: rgba(0, 0, 0, 0.8);
-            border-radius: 50px;
-            z-index: 5;
-            box-shadow: 
-                inset 0 5px 15px rgba(0,0,0,1),
-                0 0 0 4px rgba(255,255,255,0.1),
-                0 0 10px rgba(0,0,0,0.8);
+        /* Janela dos carretéis */
+        .window {
+            width: 280px;
+            height: 90px;
+            background: rgba(0, 0, 0, 0.85);
+            margin-top: 120px;
+            border-radius: 45px;
+            border: 3px solid #334155;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 0 35px;
-            border: 2px solid rgba(200, 220, 255, 0.3);
-            backdrop-filter: blur(2px);
+            padding: 0 30px;
+            z-index: 10;
+            box-shadow: inset 0 5px 15px rgba(0,0,0,1);
         }
 
-        /* Efeito de vidro na janela */
-        .reel-window::after {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
-            border-radius: 50px;
-            background: linear-gradient(135deg, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0) 40%);
-            pointer-events: none;
-        }
-
-        /* Marcadores de fita no meio da janela */
-        .window-markers {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            display: flex;
-            gap: 15px;
-        }
-
-        .marker {
-            width: 6px;
-            height: 6px;
-            background: #444;
-            border-radius: 50%;
-            box-shadow: inset 0 1px 2px rgba(0,0,0,0.8), 0 1px 0 rgba(255,255,255,0.2);
-        }
-
-        /* Carretéis (Reels) */
-        .reel-container {
-            position: relative;
-            width: 60px;
-            height: 60px;
-        }
-
-        /* Rolo da fita magnética preta */
-        .tape-roll {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            border-radius: 50%;
-            background: #111;
-            z-index: 1;
-            box-shadow: 0 0 0 2px #222;
-        }
-
-        .tape-roll.left {
-            width: 160px;
-            height: 160px;
-            background: repeating-radial-gradient(
-                circle at center,
-                #1a1a1a,
-                #1a1a1a 2px,
-                #0a0a0a 2px,
-                #0a0a0a 4px
-            );
-        }
-
-        .tape-roll.right {
-            width: 80px;
-            height: 80px;
-            background: repeating-radial-gradient(
-                circle at center,
-                #1a1a1a,
-                #1a1a1a 2px,
-                #0a0a0a 2px,
-                #0a0a0a 4px
-            );
-        }
-
-        /* A rodinha de plástico branco do carretel */
         .reel {
-            position: absolute;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            background: transparent;
+            width: 65px;
+            height: 65px;
+            background: #f8fafc;
             border-radius: 50%;
-            border: 8px solid #f0f0f0;
-            z-index: 2;
-            box-shadow: 
-                inset 0 0 5px rgba(0,0,0,0.5),
-                0 2px 5px rgba(0,0,0,0.5);
-            animation: spin 3s linear infinite;
-        }
-
-        @keyframes spin {
-            100% { transform: rotate(360deg); }
-        }
-
-        /* Hastes do carretel */
-        .spoke {
-            position: absolute;
-            top: -8px;
-            left: 20px; /* (60 - 4)/2 - border ajuste */
-            width: 4px;
-            height: 60px;
-            background: #f0f0f0;
-        }
-
-        .spoke:nth-child(2) { transform: rotate(60deg); }
-        .spoke:nth-child(3) { transform: rotate(120deg); }
-
-        .center-hole {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 22px;
-            height: 22px;
-            background: #fff;
-            border-radius: 50%;
-            z-index: 3;
-            box-shadow: inset 0 2px 4px rgba(0,0,0,0.8);
-            /* Dentes da engrenagem do toca-fitas */
-            background-image: 
-                linear-gradient(45deg, transparent 40%, #ccc 40%, #ccc 60%, transparent 60%),
-                linear-gradient(-45deg, transparent 40%, #ccc 40%, #ccc 60%, transparent 60%),
-                linear-gradient(0deg, transparent 40%, #ccc 40%, #ccc 60%, transparent 60%),
-                linear-gradient(90deg, transparent 40%, #ccc 40%, #ccc 60%, transparent 60%);
-        }
-
-        /* Textos sobre a arte */
-        .text-overlay {
-            position: absolute;
-            z-index: 10;
-            color: rgba(255, 255, 255, 0.9);
-            font-size: 14px;
-            text-shadow: 1px 1px 3px rgba(0,0,0,0.8);
-            letter-spacing: 1px;
-        }
-        .side-a { top: 20px; left: 20px; }
-        .side-b { top: 20px; right: 20px; }
-
-        .small-sticker {
-            position: absolute;
-            bottom: 20px;
-            right: 20px;
-            background: rgba(245, 240, 230, 0.9);
-            padding: 5px 10px;
-            color: #333;
-            font-family: 'Courier Prime', monospace;
-            font-size: 10px;
-            font-weight: bold;
-            z-index: 10;
-            box-shadow: 2px 2px 5px rgba(0,0,0,0.5);
-            transform: rotate(-2deg);
-            border: 1px solid #ccc;
-        }
-
-        /* Base da fita (Trapézio / Área Magnética) */
-        .cassette-bottom-section {
-            width: 100%;
-            height: 80px;
-            margin-top: auto;
             position: relative;
             display: flex;
             justify-content: center;
-            align-items: flex-end;
-        }
-
-        /* Adesivo de papel inferior */
-        .bottom-sticker {
-            position: absolute;
-            top: 0;
-            width: 560px;
-            height: 60px;
-            background: #e8e4d9;
-            z-index: 10;
-            display: flex;
-            justify-content: space-between;
             align-items: center;
-            padding: 0 20px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
-            border-radius: 0 0 5px 5px;
-            /* Textura sutil de papel */
-            background-image: url('data:image/svg+xml;utf8,<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><filter id="noiseFilter"><feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/></filter><rect width="100%" height="100%" filter="url(%23noiseFilter)" opacity="0.05"/></svg>');
+            border: 5px solid #94a3b8;
         }
 
-        .title-block {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .main-title {
-            font-family: 'Special Elite', cursive;
-            font-size: 20px;
-            color: #111;
-            margin-bottom: 2px;
-        }
-
-        .sub-title {
-            font-size: 14px;
-            color: #333;
-            font-weight: bold;
-        }
-
-        .stereo-block {
-            text-align: right;
-            border-left: 2px solid #555;
-            padding-left: 15px;
-        }
-
-        .stereo-text {
-            font-size: 18px;
-            font-weight: bold;
-            letter-spacing: 2px;
-        }
-
-        .type-text {
-            font-size: 10px;
-            margin-top: 5px;
-            color: #444;
-        }
-
-        /* O trapézio plástico inferior com os furos */
-        .magnetic-guard {
-            width: 400px;
-            height: 40px;
-            background: #2a2a2a;
-            position: relative;
-            z-index: 11;
-            clip-path: polygon(5% 0, 95% 0, 100% 100%, 0% 100%);
-            box-shadow: inset 0 5px 10px rgba(0,0,0,0.8);
-            display: flex;
-            justify-content: space-evenly;
-            align-items: center;
-            padding-bottom: 5px;
-            border-top: 2px solid #111;
-        }
-
-        .hole {
-            width: 12px;
-            height: 12px;
-            background: #050505;
+        .reel::after {
+            content: '';
+            width: 20px;
+            height: 20px;
+            background: #fff;
+            border: 4px dashed #1e293b;
             border-radius: 50%;
-            box-shadow: inset 0 2px 4px rgba(0,0,0,0.9), 0 1px 0 rgba(255,255,255,0.1);
-        }
-        
-        .hole.large {
-            width: 16px;
-            height: 16px;
         }
 
-        /* Efeito de interatividade (Play/Pause ao clicar) */
-        .playing-text {
+        .spinning {
+            animation: spin 4s linear infinite;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        /* Etiquetas e Texto */
+        .label {
             position: absolute;
-            top: 40px;
-            color: rgba(255,255,255,0.6);
-            font-size: 12px;
-            text-transform: uppercase;
-            letter-spacing: 5px;
-            animation: pulseText 2s infinite;
+            top: 25px;
+            width: 85%;
+            background: var(--gold);
+            padding: 8px;
+            border-radius: 5px;
+            text-align: center;
+            font-weight: bold;
+            color: #0f172a;
+            box-shadow: 2px 2px 5px rgba(0,0,0,0.4);
+            z-index: 10;
         }
 
-        @keyframes pulseText {
-            0%, 100% { opacity: 0.3; }
-            50% { opacity: 0.8; }
+        .info-bottom {
+            position: absolute;
+            bottom: 20px;
+            color: #fff;
+            font-size: 10px;
+            letter-spacing: 2px;
+            opacity: 0.7;
         }
 
-        .paused .reel {
-            animation-play-state: paused;
-        }
-        .paused .playing-text {
+        /* Esconder o player do YouTube */
+        #yt-player {
+            position: absolute;
+            width: 1px; height: 1px;
             opacity: 0;
-            animation: none;
-        }
-        
-        /* Instrução flutuante */
-        .instruction {
-            position: absolute;
-            bottom: 30px;
-            color: rgba(255,255,255,0.5);
-            font-size: 14px;
             pointer-events: none;
         }
 
+        .instruction {
+            position: fixed;
+            bottom: 20px;
+            color: rgba(255,255,255,0.4);
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
     </style>
 </head>
 <body>
 
-    <div class="stars"></div>
-    
-    <div class="playing-text" id="status-text">TOCANDO MAGIA...</div>
+    <div class="instruction">Toque na fita para ouvir a música</div>
 
-    <div class="cassette-wrapper" id="cassette-wrapper">
+    <div class="cassette-wrapper" id="wrapper">
         <div class="glow"></div>
-        
-        <!-- Clique na fita para pausar/tocar -->
-        <div class="cassette" id="cassette" style="cursor: pointer;" onclick="togglePlay()">
+        <div class="cassette-body" id="cassette">
+            <div class="art-cover"></div>
             
-            <!-- Área da Capa (Adesivo Principal) -->
-            <div class="label-area">
-                <div class="art-cover"></div>
-                
-                <div class="text-overlay side-a">SIDE A</div>
-                <div class="text-overlay side-b">SIDE B</div>
-                
-                <div class="small-sticker">
-                    K7-VG001<br>
-                    VAN GOGH - STARRY NIGHT
-                </div>
-
-                <!-- Janela Central dos Carretéis -->
-                <div class="reel-window">
-                    
-                    <div class="window-markers">
-                        <div class="marker"></div>
-                        <div class="marker"></div>
-                        <div class="marker"></div>
-                    </div>
-
-                    <!-- Carretel Esquerdo (Cheio) -->
-                    <div class="reel-container">
-                        <div class="tape-roll left"></div>
-                        <div class="reel">
-                            <div class="spoke"></div>
-                            <div class="spoke"></div>
-                            <div class="spoke"></div>
-                            <div class="center-hole"></div>
-                        </div>
-                    </div>
-
-                    <!-- Carretel Direito (Vazio) -->
-                    <div class="reel-container">
-                        <div class="tape-roll right"></div>
-                        <div class="reel">
-                            <div class="spoke"></div>
-                            <div class="spoke"></div>
-                            <div class="spoke"></div>
-                            <div class="center-hole"></div>
-                        </div>
-                    </div>
-
-                </div>
+            <div class="label">
+                VAN GOGH: MINHA IRMÃ - LUIZ GABRIEL LOPES
             </div>
 
-            <!-- Seção Inferior -->
-            <div class="cassette-bottom-section">
-                
-                <!-- Adesivo de Papel Bege -->
-                <div class="bottom-sticker">
-                    <div class="title-block">
-                        <div class="main-title">THE STARRY NIGHT</div>
-                        <div class="sub-title">VINCENT VAN GOGH</div>
-                    </div>
-                    <div class="stereo-block">
-                        <div class="stereo-text">STEREO</div>
-                        <div class="type-text">TYPE II CHROME</div>
-                    </div>
-                </div>
-
-                <!-- Protetor Magnético Inferior -->
-                <div class="magnetic-guard">
-                    <div class="hole"></div>
-                    <div class="hole large"></div>
-                    <div class="hole"></div>
-                    <div class="hole large"></div>
-                    <div class="hole"></div>
-                </div>
-
+            <div class="window">
+                <div class="reel" id="reel1"></div>
+                <div class="reel" id="reel2"></div>
             </div>
+
+            <div class="info-bottom">HIGH POSITION / TYPE II - 60 MIN</div>
         </div>
     </div>
 
-    <div class="instruction">Mova o mouse para interagir | Clique para Pausar/Tocar</div>
+    <!-- API do YouTube -->
+    <div id="yt-player"></div>
 
     <script>
-        const wrapper = document.getElementById('cassette-wrapper');
-        const cassette = document.getElementById('cassette');
-        const statusText = document.getElementById('status-text');
-        let isPlaying = true;
+        let player;
+        let isPlaying = false;
+        const wrapper = document.getElementById('wrapper');
+        const reels = [document.getElementById('reel1'), document.getElementById('reel2')];
 
-        // Efeito de Parallax / Inclinação 3D com o mouse
-        document.addEventListener('mousemove', (e) => {
-            const xAxis = (window.innerWidth / 2 - e.pageX) / 25;
-            const yAxis = (window.innerHeight / 2 - e.pageY) / 25;
-            
-            // Adiciona um brilho dinâmico baseado na posição do mouse
-            wrapper.style.transform = `rotateY(${xAxis}deg) rotateX(${yAxis}deg)`;
-            
-            // Reflexo dinâmico no vidro da fita
-            cassette.style.boxShadow = `
-                inset ${-xAxis}px ${-yAxis}px 20px rgba(255,255,255,0.4),
-                inset 0 0 5px rgba(255,255,255,0.8),
-                ${xAxis * 2}px ${yAxis * 2 + 20}px 50px rgba(0,0,0,0.8),
-                0 0 0 2px rgba(255,255,255,0.2)
-            `;
-        });
+        // Carregar API do YouTube
+        var tag = document.createElement('script');
+        tag.src = "https://www.youtube.com/iframe_api";
+        var firstScriptTag = document.getElementsByTagName('script')[0];
+        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 
-        // Retorna a fita para a posição original quando o mouse sai da tela
-        document.addEventListener('mouseleave', () => {
-            wrapper.style.transform = `rotateY(0deg) rotateX(0deg)`;
-            cassette.style.boxShadow = `
-                inset 0 0 20px rgba(255,255,255,0.4),
-                inset 0 0 5px rgba(255,255,255,0.8),
-                0 20px 50px rgba(0,0,0,0.8),
-                0 0 0 2px rgba(255,255,255,0.2)
-            `;
-        });
-
-        // Função para pausar/tocar a animação das fitas
-        function togglePlay() {
-            isPlaying = !isPlaying;
-            if (isPlaying) {
-                cassette.classList.remove('paused');
-                statusText.style.opacity = '1';
-                statusText.innerText = 'TOCANDO MAGIA...';
-            } else {
-                cassette.classList.add('paused');
-                statusText.style.opacity = '0';
-            }
+        function onYouTubeIframeAPIReady() {
+            player = new YT.Player('yt-player', {
+                videoId: 'YIA_GyNw6vQ',
+                events: {
+                    'onStateChange': (event) => {
+                        if (event.data === YT.PlayerState.ENDED) {
+                            toggleAnimation(false);
+                        }
+                    }
+                }
+            });
         }
+
+        // Lógica de clique
+        wrapper.addEventListener('click', () => {
+            if (!player) return;
+
+            if (isPlaying) {
+                player.pauseVideo();
+                toggleAnimation(false);
+            } else {
+                player.playVideo();
+                toggleAnimation(true);
+            }
+            isPlaying = !isPlaying;
+        });
+
+        function toggleAnimation(play) {
+            reels.forEach(r => {
+                play ? r.classList.add('spinning') : r.classList.remove('spinning');
+            });
+        }
+
+        // Efeito de inclinação com o rato
+        document.addEventListener('mousemove', (e) => {
+            const x = (window.innerWidth / 2 - e.pageX) / 20;
+            const y = (window.innerHeight / 2 - e.pageY) / 20;
+            wrapper.style.transform = `rotateY(${x}deg) rotateX(${y}deg)`;
+        });
     </script>
 </body>
 </html>

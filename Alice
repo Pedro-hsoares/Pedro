@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fita K7 - Noite Estrelada</title>
+    <style>
+        :root {
+            --bg-color: #050a15;
+            --cassette-main: #1e293b;
+            --cassette-border: #0f172a;
+            --gold: #fbbf24;
+        }
+
+        body {
+            background: radial-gradient(circle at center, #1a2a42 0%, #050a15 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            overflow: hidden;
+            perspective: 1000px;
+            font-family: 'Courier New', Courier, monospace;
+        }
+
+        /* Container da Cassete com efeito 3D */
+        .cassette-wrapper {
+            width: 550px;
+            height: 350px;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.1s ease-out;
+            cursor: pointer;
+        }
+
+        .glow {
+            position: absolute;
+            top: -20px; left: -20px; right: -20px; bottom: -20px;
+            background: linear-gradient(45deg, #f0e130, #3a7bd5, #00d2ff);
+            border-radius: 30px;
+            filter: blur(40px);
+            opacity: 0.3;
+            z-index: -1;
+            animation: pulseGlow 4s infinite alternate;
+        }
+
+        @keyframes pulseGlow {
+            from { opacity: 0.2; transform: scale(0.95); }
+            to { opacity: 0.4; transform: scale(1.05); }
+        }
+
+        .cassette-body {
+            width: 100%;
+            height: 100%;
+            background: var(--cassette-main);
+            border-radius: 20px;
+            border: 6px solid var(--cassette-border);
+            position: relative;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.8), inset 0 0 30px rgba(0,0,0,0.5);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        /* Pintura de fundo */
+        .art-cover {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: url('https://upload.wikimedia.org/wikipedia/commons/thumb/e/ea/Van_Gogh_-_Starry_Night_-_Google_Art_Project.jpg/1280px-Van_Gogh_-_Starry_Night_-_Google_Art_Project.jpg');
+            background-size: cover;
+            background-position: center;
+            opacity: 0.5;
+            mix-blend-mode: soft-light;
+        }
+
+        /* Janela dos carretéis */
+        .window {
+            width: 280px;
+            height: 90px;
+            background: rgba(0, 0, 0, 0.85);
+            margin-top: 120px;
+            border-radius: 45px;
+            border: 3px solid #334155;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 30px;
+            z-index: 10;
+            box-shadow: inset 0 5px 15px rgba(0,0,0,1);
+        }
+
+        .reel {
+            width: 65px;
+            height: 65px;
+            background: #f8fafc;
+            border-radius: 50%;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border: 5px solid #94a3b8;
+        }
+
+        .reel::after {
+            content: '';
+            width: 20px;
+            height: 20px;
+            background: #fff;
+            border: 4px dashed #1e293b;
+            border-radius: 50%;
+        }
+
+        .spinning {
+            animation: spin 4s linear infinite;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        /* Etiquetas e Texto */
+        .label {
+            position: absolute;
+            top: 25px;
+            width: 85%;
+            background: var(--gold);
+            padding: 8px;
+            border-radius: 5px;
+            text-align: center;
+            font-weight: bold;
+            color: #0f172a;
+            box-shadow: 2px 2px 5px rgba(0,0,0,0.4);
+            z-index: 10;
+        }
+
+        .info-bottom {
+            position: absolute;
+            bottom: 20px;
+            color: #fff;
+            font-size: 10px;
+            letter-spacing: 2px;
+            opacity: 0.7;
+        }
+
+        /* Esconder o player do YouTube */
+        #yt-player {
+            position: absolute;
+            width: 1px; height: 1px;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .instruction {
+            position: fixed;
+            bottom: 20px;
+            color: rgba(255,255,255,0.4);
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="instruction">Toque na fita para ouvir a música</div>
+
+    <div class="cassette-wrapper" id="wrapper">
+        <div class="glow"></div>
+        <div class="cassette-body" id="cassette">
+            <div class="art-cover"></div>
+            
+            <div class="label">
+                VAN GOGH: MINHA IRMÃ - LUIZ GABRIEL LOPES
+            </div>
+
+            <div class="window">
+                <div class="reel" id="reel1"></div>
+                <div class="reel" id="reel2"></div>
+            </div>
+
+            <div class="info-bottom">HIGH POSITION / TYPE II - 60 MIN</div>
+        </div>
+    </div>
+
+    <!-- API do YouTube -->
+    <div id="yt-player"></div>
+
+    <script>
+        let player;
+        let isPlaying = false;
+        const wrapper = document.getElementById('wrapper');
+        const reels = [document.getElementById('reel1'), document.getElementById('reel2')];
+
+        // Carregar API do YouTube
+        var tag = document.createElement('script');
+        tag.src = "https://www.youtube.com/iframe_api";
+        var firstScriptTag = document.getElementsByTagName('script')[0];
+        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+        function onYouTubeIframeAPIReady() {
+            player = new YT.Player('yt-player', {
+                videoId: 'YIA_GyNw6vQ',
+                events: {
+                    'onStateChange': (event) => {
+                        if (event.data === YT.PlayerState.ENDED) {
+                            toggleAnimation(false);
+                        }
+                    }
+                }
+            });
+        }
+
+        // Lógica de clique
+        wrapper.addEventListener('click', () => {
+            if (!player) return;
+
+            if (isPlaying) {
+                player.pauseVideo();
+                toggleAnimation(false);
+            } else {
+                player.playVideo();
+                toggleAnimation(true);
+            }
+            isPlaying = !isPlaying;
+        });
+
+        function toggleAnimation(play) {
+            reels.forEach(r => {
+                play ? r.classList.add('spinning') : r.classList.remove('spinning');
+            });
+        }
+
+        // Efeito de inclinação com o rato
+        document.addEventListener('mousemove', (e) => {
+            const x = (window.innerWidth / 2 - e.pageX) / 20;
+            const y = (window.innerHeight / 2 - e.pageY) / 20;
+            wrapper.style.transform = `rotateY(${x}deg) rotateX(${y}deg)`;
+        });
+    </script>
+</body>
+</html>
